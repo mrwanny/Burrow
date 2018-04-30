@@ -174,6 +174,10 @@ func (module *HTTPNotifier) Notify(status *protocol.ConsumerGroupStatus, eventID
 		req.SetBasicAuth(viper.GetString("notifier."+module.name+".username"), viper.GetString("notifier."+module.name+".password"))
 	}
 	req.Header.Set("Content-Type", "application/json")
+	
+	for header, value := range viper.GetStringMapString("notifier." + module.name + ".headers") {
+                req.Header.Set(header, value)
+        }
 
 	resp, err := module.httpClient.Do(req)
 	if err != nil {
